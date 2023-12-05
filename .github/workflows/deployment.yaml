@@ -60,7 +60,6 @@ jobs:
         run: npm run build
       - name: Deploy
         run: echo Deploying...
-        
   healthcheck: 
     runs-on: ubuntu-latest   
     outputs:   
@@ -73,10 +72,26 @@ jobs:
           host: ${{ secrets.VPS_HOST }}   
           username: ${{ secrets.VPS_USERNAME }}   
           password: ${{ secrets.VPS_PASSWORD }}   
-          inlineScript: |
-            ./scripts/healthcheck-script.sh $SERVER_PORT $HEALTHCHECK_PATH
-            if [ $? -eq 0 ]; then
-              echo "status=success" >> $GITHUB_ENV
-            else
-              echo "status=failure" >> $GITHUB_ENV
-            fi
+          inline: |
+            retries=3
+            delay_seconds=20
+
+            for attempt in $(seq "$retries"); do
+              http_status=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:$SERVER_PORT$HEALTHCHECK_PATH)
+
+              if [ "$http_status" -eq 200 ]; then
+                echo "The service has been successfully raised"
+                echo "status=success" >> $GITHUB_ENV
+                exit 0
+              else
+                echo "Error: Service not available (attempt $attempt/$retries)"
+              fi
+
+              if [ "$attempt" -lt "$retries" ]; then
+                sleep "$delay_seconds"
+              fi
+            done
+
+            echo "Error: Service could not be raised"
+            echo "status=failure" >> $GITHUB_ENV
+            exit 1
