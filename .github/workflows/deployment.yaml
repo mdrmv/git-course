@@ -60,12 +60,12 @@ jobs:
         run: npm run build
       - name: Deploy
         run: echo Deploying...
+        
   healthcheck: 
     runs-on: ubuntu-latest   
     outputs:   
       id: healthcheck_output   
     steps:   
-      
       - name: Run Healthcheck 
         id: healthcheck_status 
         uses: appleboy/ssh-action@master   
@@ -74,7 +74,6 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}   
           password: ${{ secrets.VPS_PASSWORD }}   
           inlineScript: |
-            chmod +x ./scripts/healthcheck-script.sh
             ./scripts/healthcheck-script.sh $SERVER_PORT $HEALTHCHECK_PATH
             if [ $? -eq 0 ]; then
               echo "status=success" >> $GITHUB_ENV
