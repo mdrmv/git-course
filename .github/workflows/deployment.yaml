@@ -72,7 +72,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}   
           username: ${{ secrets.VPS_USERNAME }}   
           password: ${{ secrets.VPS_PASSWORD }}         
-        inlineScript: |
+          script: |
             chmod +x ./scripts/healthcheck-script.sh 
 
       - name: Run Healthcheck 
@@ -82,7 +82,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}   
           username: ${{ secrets.VPS_USERNAME }}   
           password: ${{ secrets.VPS_PASSWORD }}   
-          inlineScript: |
+          script: |
             ./scripts/healthcheck-script.sh $SERVER_PORT $HEALTHCHECK_PATH
             if [ $? -eq 0 ]; then
               echo "status=success" >> $GITHUB_ENV
