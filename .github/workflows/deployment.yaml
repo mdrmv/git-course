@@ -72,7 +72,8 @@ jobs:
           host: ${{ secrets.VPS_HOST }}   
           username: ${{ secrets.VPS_USERNAME }}   
           password: ${{ secrets.VPS_PASSWORD }}         
-        run: chmod +x ./scripts/healthcheck-script.sh 
+        inlineScript: |
+            chmod +x ./scripts/healthcheck-script.sh 
 
       - name: Run Healthcheck 
         id: healthcheck_status 
