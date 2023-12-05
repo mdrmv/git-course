@@ -60,13 +60,20 @@ jobs:
         run: npm run build
       - name: Deploy
         run: echo Deploying...
-  healthcheck:   
+  healthcheck:
+    needs: build   
     runs-on: ubuntu-latest   
     outputs:   
       id: healthcheck_output   
     steps:   
-      - name: Set execute permissions for the script   
-        run: chmod +x ./scripts/healthcheck-script.sh 
+      - name: Set execute permissions for the script
+        uses: appleboy/ssh-action@master   
+        with:   
+          host: ${{ secrets.VPS_HOST }}   
+          username: ${{ secrets.VPS_USERNAME }}   
+          password: ${{ secrets.VPS_PASSWORD }}         
+        inlineScript: |
+            chmod +x ./scripts/healthcheck-script.sh 
 
       - name: Run Healthcheck 
         id: healthcheck_status 
