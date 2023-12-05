@@ -72,7 +72,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}   
           username: ${{ secrets.VPS_USERNAME }}   
           password: ${{ secrets.VPS_PASSWORD }}   
-          inline: |
+          script: |
             retries=3
             delay_seconds=20
 
