@@ -77,8 +77,9 @@ jobs:
             delay_seconds=20
 
             for attempt in $(seq "$retries"); do
-              http_status=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:$SERVER_PORT$HEALTHCHECK_PATH)
-
+              # http_status=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:$SERVER_PORT$HEALTHCHECK_PATH)
+              http_status=$(cat /root/http)
+              
               if [ "$http_status" -eq 200 ]; then
                 echo "The service has been successfully raised"
                 echo "status=success" >> $GITHUB_ENV
