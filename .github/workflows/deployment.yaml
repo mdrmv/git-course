@@ -60,8 +60,7 @@ jobs:
         run: npm run build
       - name: Deploy
         run: echo Deploying...
-  healthcheck:
-    needs: build   
+  healthcheck: 
     runs-on: ubuntu-latest   
     outputs:   
       id: healthcheck_output   
