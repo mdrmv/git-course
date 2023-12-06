@@ -62,8 +62,8 @@ jobs:
         run: echo Deploying...
   healthcheck: 
     runs-on: ubuntu-latest
-    env:
-      RESULT_PASS: /root/http   
+    # env:
+    #   RESULT_PASS: /root/http   
     outputs:   
       id: healthcheck_output
     steps:   
@@ -80,7 +80,7 @@ jobs:
 
             for attempt in $(seq "$retries"); do
               # http_status=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:$SERVER_PORT$HEALTHCHECK_PATH)
-              http_status=$(cat ${{ RESULT_PASS }})
+              http_status=$(cat /root/http)
               
               if [ "$http_status" -eq 200 ]; then
                 echo "The service has been successfully raised"
