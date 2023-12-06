@@ -3,10 +3,8 @@ on:
   push:
     branches:
       - 'master'
-    # paths-ignore:
-    #   - '.github/workflows/*'
-    # paths:
-    #   - '.github/workflows/template_healthcheck.yml'    
+    paths:
+      - '.github/workflows/template_healthcheck.yml'    
 
 jobs:
   test:
@@ -63,6 +61,7 @@ jobs:
         run: npm run build
       - name: Deploy
         run: echo Deploying...
+
   healthcheck:    
     uses: ./.github/workflows/template_healthcheck.yml
     with:
