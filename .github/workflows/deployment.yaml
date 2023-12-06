@@ -82,7 +82,8 @@ jobs:
             delay_seconds=20
 
             for attempt in $(seq "$retries"); do
-              http_status=$(cat /root/http | echo "Ok" > $TXT_PATH)
+              http_status=$(cat /root/http)
+              echo $TXT_PATH
               
               if [ "$http_status" -eq 200 ]; then
                 echo "The service has been successfully raised"
