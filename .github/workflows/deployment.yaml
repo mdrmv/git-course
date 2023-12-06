@@ -3,10 +3,8 @@ on:
   push:
     branches:
       - master
-    # paths:
-    #   - .github/workflows/template_healthcheck.yml
-
-
+    # paths-ignore:
+    #   - '.github/workflows/*'
 jobs:
   test:
     runs-on: ubuntu-latest
