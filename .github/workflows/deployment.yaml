@@ -2,11 +2,12 @@ name: Deploy React App
 on:
   push:
     branches:
-      - master
+      - 'master'
     # paths-ignore:
     #   - '.github/workflows/*'
-    paths:
-      - '.github/workflows/template_healthcheck.yml'    
+    # paths:
+    #   - '.github/workflows/template_healthcheck.yml'    
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -64,7 +65,6 @@ jobs:
         run: echo Deploying...
   healthcheck:    
     uses: ./.github/workflows/template_healthcheck.yml
-    if: always() && needs.build.result == 'success'
     with:
       RESULT_PATH: /root/http
     secrets:
