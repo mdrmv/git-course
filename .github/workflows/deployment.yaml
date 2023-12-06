@@ -5,6 +5,8 @@ on:
       - master
     # paths-ignore:
     #   - '.github/workflows/*'
+    paths:
+      - '.github/workflows/template_healthcheck.yml'    
 jobs:
   test:
     runs-on: ubuntu-latest
