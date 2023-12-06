@@ -1,0 +1,66 @@
+name: template_deploy
+
+on:
+  workflow_call:
+    inputs:
+        RESULT_PATH:
+        required: true
+        type: string      
+      
+    secrets:
+      VPS_HOST:
+        required: true
+      VPS_USERNAME:
+        required: true
+      VPS_PASSWORD:
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pull and run docker image
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          script: |
+
+  healthcheck: 
+    runs-on: ubuntu-latest
+    # env:
+    #   RESULT_PASS: /root/http   
+    outputs:   
+      id: healthcheck_output
+    steps:   
+      - name: Run Healthcheck 
+        id: healthcheck_status 
+        uses: appleboy/ssh-action@master   
+        with:
+          host: ${{ secrets.VPS_HOST }}   
+          username: ${{ secrets.VPS_USERNAME }}   
+          password: ${{ secrets.VPS_PASSWORD }}   
+          script: |
+            retries=3
+            delay_seconds=20
+
+            for attempt in $(seq "$retries"); do
+              http_status=$(cat $RESULT_PATH)
+              
+              if [ "$http_status" -eq 200 ]; then
+                echo "The service has been successfully raised"
+                echo "status=success" >> $GITHUB_ENV
+                exit 0
+              else
+                echo "Error: Service not available (attempt $attempt/$retries)"
+              fi
+
+              if [ "$attempt" -lt "$retries" ]; then
+                sleep "$delay_seconds"
+              fi
+            done
+
+            echo "Error: Service could not be raised"
+            echo "status=failure" >> $GITHUB_ENV
+            exit 1
