@@ -85,7 +85,7 @@ jobs:
               
               if [ "$http_status" -eq 200 ]; then
                 echo "The service has been successfully raised"
-                echo "status=success" >> "$GITHUB_ENV"
+                echo "status=success" > "$GITHUB_ENV"
                 exit 0
               else
                 echo "Error: Service not available (attempt $attempt/$retries)"
@@ -97,7 +97,7 @@ jobs:
             done
 
             echo "Error: Service could not be raised"
-            echo "status=failure" >> "$GITHUB_ENV"
+            echo "status=failure" > "$GITHUB_ENV"
             exit 1
 
             # if [ $? -eq 0 ]; then
