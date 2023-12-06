@@ -40,7 +40,7 @@ jobs:
     strategy:
       matrix:
         node-version: [14, 16]
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-22.04]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Get repository code
@@ -83,11 +83,10 @@ jobs:
 
             for attempt in $(seq "$retries"); do
               http_status=$(cat /root/http)
-              echo "$TXT_PATH"
               
               if [ "$http_status" -eq 200 ]; then
                 echo "The service has been successfully raised"
-                echo "status=success" >> $GITHUB_ENV
+                echo -e "status=success" >> $GITHUB_ENV
                 exit 0
               else
                 echo "Error: Service not available (attempt $attempt/$retries)"
@@ -99,7 +98,7 @@ jobs:
             done
 
             echo "Error: Service could not be raised"
-            echo "status=failure" >> $GITHUB_ENV
+            echo -e "status=failure" >> $GITHUB_ENV
             exit 1
 
             # if [ $? -eq 0 ]; then
