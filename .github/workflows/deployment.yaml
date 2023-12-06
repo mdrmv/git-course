@@ -63,12 +63,14 @@ jobs:
   healthcheck: 
     runs-on: ubuntu-latest   
     outputs:   
-      id: healthcheck_output   
+      id: healthcheck_output
+    env:
+      RESULT_PASS: /root/http
     steps:   
       - name: Run Healthcheck 
         id: healthcheck_status 
         uses: appleboy/ssh-action@master   
-        with:   
+        with:
           host: ${{ secrets.VPS_HOST }}   
           username: ${{ secrets.VPS_USERNAME }}   
           password: ${{ secrets.VPS_PASSWORD }}   
@@ -78,7 +80,7 @@ jobs:
 
             for attempt in $(seq "$retries"); do
               # http_status=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:$SERVER_PORT$HEALTHCHECK_PATH)
-              http_status=$(cat /root/http)
+              http_status=$(cat $RESULT_PASS)
               
               if [ "$http_status" -eq 200 ]; then
                 echo "The service has been successfully raised"
