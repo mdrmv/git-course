@@ -60,8 +60,7 @@ jobs:
         run: npm run build
       - name: Deploy
         run: echo Deploying...
-
-  
+ 
   healthcheck: 
     runs-on: ubuntu-latest
     env:
@@ -92,7 +91,7 @@ jobs:
               fi
 
               if [ "$attempt" -lt "$retries" ]; then
-                sleep "$delay_seconds"
+                sleep "$delay_seconds"Ж
               fi
             done
 
