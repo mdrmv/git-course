@@ -73,19 +73,19 @@ jobs:
         id: healthcheck_status 
         uses: appleboy/ssh-action@master   
         with:
-          host: ${{ secrets.VPS_HOST }}   
-          username: ${{ secrets.VPS_USERNAME }}   
-          password: ${{ secrets.VPS_PASSWORD }}   
+          host: ${{ secrets.VPS_HOST_INTERNAL }}   
+          username: ${{ secrets.VPS_USERNAME_INTERNAL }}   
+          password: ${{ secrets.VPS_PASSWORD_INTERNAL }}   
           script: |
             retries=3
             delay_seconds=20
 
             for attempt in $(seq "$retries"); do
-              http_status=$(cat /root/http)
+            http_status=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:$SERVER_PORT$HEALTHCHECK_PATH)
               
               if [ "$http_status" -eq 200 ]; then
                 echo "The service has been successfully raised"
-                echo "status=success" > "$GITHUB_ENV"
+                echo "status=success" >> "$GITHUB_ENV"
                 exit 0
               else
                 echo "Error: Service not available (attempt $attempt/$retries)"
@@ -97,7 +97,7 @@ jobs:
             done
 
             echo "Error: Service could not be raised"
-            echo "status=failure" > "$GITHUB_ENV"
+            echo "status=failure" >> "$GITHUB_ENV"
             exit 1
 
             # if [ $? -eq 0 ]; then
